@@ -37,8 +37,7 @@ temp/
 # Coverage reports
 coverage/
 
-# Dependencies for front-end projects (if using front-end build tools like webpack or react)
-public/
+
 
 # Debug files
 *.bak
