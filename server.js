@@ -17,16 +17,23 @@ function chunkArray(arr, size) {
 }
 
 app.get("/", async (req, res) => {
+  const prn = req.query.prn;
+
+  if (!prn) {
+    return res
+      .status(400)
+      .send("PRN number is required in the query parameter");
+  }
+
   try {
     const response = await axios.get(
-      "https://fc6c-14-142-19-238.ngrok-free.app/reports/pdf/?prn=PRN000001985504"
+      `https://fc6c-14-142-19-238.ngrok-free.app/reports/pdf/?prn=${prn}`
     );
 
     const patientData = response.data;
     const history = patientData.history;
 
     const plotableTests = history.filter((test) => test.isGraphPlotable);
-
     const chunks = chunkArray(plotableTests, 4);
 
     res.render("index", {
@@ -54,7 +61,8 @@ app.get("/", async (req, res) => {
   }
 });
 
-// Start the server
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
 });
+
+// PRN000001985504;
