@@ -40,7 +40,7 @@ app.get("/", async (req, res) => {
       logoUrl: "/images/image.png",
       grayUrl: "images/logo.png",
       blackImageUrl: "/images/black.png",
-      qrCodeUrl: "/images/qr.png",
+      qrCodeUrl: "/images/QR.png",
       iconPolygonUrl: "/images/Polygon 3.svg",
       iconGlobeUrl: "/images/material-symbols_globe.svg",
       iconCallUrl: "/images/material-symbols_call.svg",
@@ -64,5 +64,3 @@ app.get("/", async (req, res) => {
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
 });
-
-// PRN000001985504;
