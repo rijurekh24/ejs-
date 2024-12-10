@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Report</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        .a4-page {
+            display: flex;
+            flex-direction: column;
+            height: 297mm;
+            width: 210mm;
+            background: white;
+            border: 1px dotted black;
+            padding: 20px 30px 0 30px;
+            box-sizing: border-box;
+        }
+
+        hr {
+            margin: 20px 0 0 0;
+            width: 100%;
+            height: 1px;
+            background-color: #999;
+            border: none;
+        }
+
+        @media print {
+            @page {
+                margin: 0;
+                size: A4;
+            }
+
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                margin: 0;
+            }
+
+            .a4-page {
+                border: none !important;
+            }
+
+        }
+
+        /* .content {
+                flex: 1;
+            } */
+
+        footer {
+            font-size: 12px;
+            color: #777;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 22px;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* table */
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            background-color: #ffffff;
+            border-radius: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        small {
+            color: #eee;
+            font-weight: 500;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            position: relative;
+            font-weight: 600;
+        }
+
+        th {
+            background-color: #00826c;
+            color: #ffffff;
+            border-bottom: 2px solid #006a57;
+        }
+
+        td {
+            color: #333;
+            font-size: 15px;
+        }
+
+        td span {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 5px;
+            color: #ffffff;
+        }
+
+        .concerning {
+            background-color: #b02b2b;
+            font-size: 14px;
+            padding: 15px 25px;
+        }
+
+        .good {
+            background-color: #228b22;
+            font-size: 14px;
+            padding: 15px 25px;
+        }
+
+        th:not(:last-child)::after,
+        td:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 0;
+            width: 1px;
+            height: 50%;
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- page 0 -->
+    <div class="a4-page"
+        style="background-color:#fff !important ;padding-left: 0 !important; padding-right: 0 !important; padding-top: 0;">
+        <div
+            style="background-image: url('<%= introImageUrl %>'); background-size: cover; background-position: center; width: 100%; height: 1700px; position: relative;">
+            <div style="padding: 20px 30px 0 30px;">
+                <header style="display: flex; justify-content: space-between; align-items: center;">
+                    <img src="<%= greenLogoUrl %>" alt="" style="height: 27px;">
+                    <div style="font-size: 28px; color: #fff; font-weight: bold;">Smart Report</div>
+                </header>
+                <div style="margin-top: 130px; margin-left: 30px;">
+                    <div style="padding: 8px 10px; text-align: center; font-size: 22px; color: #ffffff; font-weight: 600; 
+                                   background-image: url('<%= rectangle22Url %>'); background-size: cover; background-position: center; 
+                                   border-radius: 40px; border: 1px solid #c4fff4; width: 200px; margin-bottom: 15px;">
+                        A Comprehensive
+                    </div>
+
+                    <h1 style="margin: 0 0 20px 0; font-size: 45px; color: #fff; margin-bottom: 15px;">
+                        Health Analysis <br> Report
+                    </h1>
+                    <div style="width: 80%;">
+                        <p style="margin: 0; font-size: 22px; font-weight: 600; color: white;">
+                            AI Based Personalised Report for You
+                        </p>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; align-items: center; background-color: #ffffff;">
+            <div style="background: linear-gradient(to bottom right, #118576, #0f7f70); width: 100%;">
+                <div style="color: white; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="padding: 32px 40px;">
+                        <p style="margin: 0; font-size: 20px; margin-bottom: 15px;">Booking ID: <%= bookingId %>
+                        </p>
+                        <h2
+                            style="margin: 5px 0; font-size: 28px; font-weight: 600; margin-top: 8px; margin-bottom: 8px; margin-bottom: 15px;">
+                            <%= patientName %>
+                        </h2>
+                        <p style="margin: 0; font-size: 22px;">
+                            <%= gender %>, <%= age %> Yrs
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+            <div style="display: flex; align-items: center; padding: 15px; justify-content: space-between; gap: 30px;">
+                <div>
+                    <img src="<%= qrCodeUrl %>" alt="QR Code" style="width: 170px; height: 170px;">
+                </div>
+                <div>
+                    <div style="display: flex; gap: 10px;">
+                        <img src="<%= iconPolygonUrl %>" alt="" style="width: 15px;">
+                        <h3 style="font-size: 20px; font-weight: 600; color: #333;">Scan this QR Code & Check your Lab
+                            Report</h3>
+                    </div>
+                    <p style="margin: 0 0 15px; font-size: 14px; color: #666; font-weight: 600">Alternative ways to
+                        check
+                        Lab report:</p>
+                    <div style="display: flex; gap: 10px;">
+                        <img src="<%= iconGlobeUrl %>" alt="" style="width: 27px;">
+                        <p style="font-size: 16px; color: #333; display: flex; align-items: center; font-weight: 600">
+                            Go to
+                            <a href="https://stylecheck.org" target="_blank"
+                                style="text-decoration: none; color: #009f85; margin-left: 5px; margin-right: 5px;">
+                                stylecheck.org </a> on your mobile.
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <img src="<%= iconCallUrl %>" alt="" style="width: 30px;">
+                        <p style="font-size: 16px; color: #333; display: flex; align-items: center; font-weight: 600">
+                            Call at <span style="color: #009f85; margin-left: 5px; margin-right: 5px;">0123456789</span>
+                            for
+                            any doubt.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: auto;">
+            <div
+                style="padding: 0 20px 0 20px; height: 50px; background-color: #0a574d; display: flex; align-items: center;">
+                <footer
+                    style="margin: 0; display: flex; justify-content: space-between !important; align-items: center; width: 100%;">
+                    <p style="color: white !important;">NY Patil Medical College, Pune, Maharashtra</p>
+                    <p style="color: white !important;">www.mainwebsite.com</p>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <!-- page 1 -->
+    <div class="a4-page"
+        style="background-color:#fff !important; padding-left: 0 !important; padding-right: 0 !important;">
+        <div style="padding: 0 30px 0 30px;">
+            <header style="display: flex; justify-content: space-between; align-items: center;">
+                <img src="<%= logoUrl %>" alt="" style="height: 35px;">
+                <div style="font-size: 28px; color: #000; font-weight: bold;">Smart Report</div>
+            </header>
+            <div
+                style="text-align: center; display: flex; justify-content: center; flex-direction: column; align-items:center;">
+                <h1
+                    style="text-align: center; margin: 100px 0 30px 0; font-size: 18px; color: #eee; background-color: #000; padding: 8px 25px; border-radius: 20px;">
+                    AI Based Personalised Insights</h1>
+                <div style="width: 80%;">
+                    <p style="text-align: center; margin: 0; font-size: 45px; font-weight: 600;">A Comprehensive
+                        <span style="color: #009f85;">Health Analysis</span> Report
+                    </p>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                    <!-- Additional dynamic content or placeholders can be added here -->
+                </div>
+            </div>
+        </div>
+
+        <div
+            style="display: flex; justify-content: center; align-items: center; background-color: #ffffff; margin-top: 50px;">
+            <div style="display: flex; gap: 18px;">
+                <div style="width: 180px; height: 230px; background-color: #00806d; border-radius: 0 15px 15px 0;">
+                </div>
+
+                <div
+                    style="background: url('<%= blackImageUrl %>') no-repeat center center / cover, linear-gradient(to bottom right, #0a0a0a, #333); border-radius: 15px; width: 400px; height: 230px; color: white; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div
+                        style="background-color: #00806d; color: white; padding: 5px 10px; border-radius: 15px 0 15px 0; font-size: 14px; font-weight: bold; width: max-content; padding: 10px 15px;">
+                        Patient Details
+                    </div>
+
+                    <div style="padding: 20px;">
+                        <p style="margin: 0; font-size: 19px;">Booking ID: <%= bookingId %>
+                        </p>
+                        <h2
+                            style="margin: 5px 0; font-size: 28px; font-weight: 600; margin-top: 8px; margin-bottom: 8px;">
+                            <%= patientName %>
+                        </h2>
+                        <p style="margin: 0; font-size: 21px;">
+                            <%= gender %>, <%= age %>
+                        </p>
+                    </div>
+                </div>
+
+                <div style="width: 180px; height: 230px; background-color: #00806d; border-radius: 15px 0 0 15px;">
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; align-items: center; margin-top: 30px;">
+            <div
+                style="display: flex; align-items: center; background: #ffffff; padding: 20px; justify-content: space-between; gap: 30px;">
+                <div>
+                    <img src="<%= qrCodeUrl %>" alt="QR Code" style="width: 170px; height: 170px;">
+                </div>
+                <div>
+                    <div style="display: flex; gap: 10px;">
+                        <img src="<%= iconPolygonUrl %>" alt="" style="width: 15px;">
+                        <h3 style="font-size: 20px; font-weight: 600; color: #333;">Scan this QR Code & Check your Lab
+                            Report</h3>
+                    </div>
+                    <p style="margin: 0 0 15px; font-size: 14px; color: #666; font-weight: 600">Alternative ways to
+                        check
+                        Lab report:</p>
+
+                    <div style="display: flex; gap: 10px;">
+                        <img src="<%= iconGlobeUrl %>" alt="" style="width: 27px;">
+                        <p style="font-size: 16px; color: #333; display: flex; align-items: center; font-weight: 600">
+                            Go to
+                            <a href="https://stylecheck.org" target="_blank"
+                                style="text-decoration: none; color: #009f85; margin-left: 5px; margin-right: 5px;">
+                                stylecheck.org </a> on your mobile.
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <img src="<%= iconCallUrl %>" alt="" style="width: 30px;">
+                        <p style="font-size: 16px; color: #333; display: flex; align-items: center; font-weight: 600">
+                            Call at <span style="color: #009f85; margin-left: 5px; margin-right: 5px;">0123456789</span>
+                            for
+                            any doubt.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="padding: 0 20px 0 20px; margin-top:auto ;">
+            <div>
+                <hr>
+                <footer>
+                    <p>NY Patil Medical College, Pune, Maharashtra</p>
+                    <p>www.mainwebsite.com</p>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- page 4 -->
+
+    <% historyChunks.forEach((chunk, pageIndex)=> { %>
+        <!-- A4 Page -->
+        <div class="a4-page" style="background-color: #f4f4f4 !important;">
+            <header style="display: flex; justify-content: space-between; align-items: center;">
+                <img src="<%= logoUrl %>" alt="Logo" style="height: 35px;">
+                <div style="font-size: 28px; color: #000; font-weight: bold;">Smart Report</div>
+            </header>
+            <div class="content">
+                <h1 style="text-align: center; margin: 20px 0 0 0; font-size: 27px;">Historical Charts - Page <%= pageIndex
+                        + 1 %>
+                </h1>
+                <p style="text-align: center; margin: 20px 0 20px 0; font-size: 20px;">As of 30th Dec</p>
+    
+                <!-- Dynamic chart containers -->
+                <div id="charts-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                    <% chunk.forEach((test, index)=> { %>
+                        <div class="card"
+                            style="background:#fff; padding: 15px; border-radius: 7px; display: flex; flex-direction: column; ">
+                            <div style="display: flex; justify-content: space-between; ">
+                                <div>
+                                    <h2 style="font-size: 16px; margin: 0; max-width: 110px; word-wrap: break-word;">
+                                        <%= test.testName %>
+                                    </h2>
+
+
+                                    <p style="margin: 10px 0 0px 0; font-size: 12px; color: #999;">
+                                        Your Latest Result: <br>
+                                        <strong style="color: #000; font-size: 20px;">
+                                            <%= test.currentResultValue %>
+                                                <%= test.unit %>
+                                        </strong>
+                                    </p>
+                                    <p style="margin: 10px 0 0px 0; font-size: 12px; color: #999;">On: <span>
+                                            <%= test.currentResultDate %>
+                                        </span></p>
+                                </div>
+                                <div>
+                                    <p
+                                        style="color: <%= test.abnormal ? '#ff5555' : '#228B22' %>; margin: 0; font-weight: 600; font-size: 14px; margin-bottom: 20%; text-align:end">
+                                        • <%= test.abnormal ? 'Low' : 'High' %>
+                                    </p>
+                                    <div
+                                        style="width: 170px; height: 6px; border-radius: 20px; position: relative; background: linear-gradient(to right, #f89897, #228B22, #ff5555);">
+                                        <div
+                                            style="width: 15px;height: 15px;background-color: <%= test.abnormal ? '#ff5555' : '#228B22' %>;border-radius: 50%;position: absolute;left: <%= test.abnormal ? '130px' : '50px' %>;top: -6px;border: 2px solid white">
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; width: 160px; justify-content: space-around; gap: 60px;">
+                                        <p style="font-size: 12px;">8.8</p>
+                                        <p style="font-size: 12px;">10.5</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="chart<%= pageIndex * 6 + index %>"></div>
+                        </div>
+                        <% }) %>
+                </div>
+            </div>
+            
+            <div style="margin-top: auto;">
+                <hr>
+            </div>
+            <footer style=" padding: 0 0; text-align: center;">
+                <p>NY Patil Medical College, Pune, Maharashtra</p>
+                <p>www.mainwebsite.com</p>
+            </footer>
+        </div>
+        <% }) %>
+    
+            <!-- Import ApexCharts JS -->
+            <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const history = <%- JSON.stringify(history) %>;
+
+                    history.forEach((test, index) => {
+                        if (test.isGraphPlotable) {
+                            const chartId = `chart${index}`; 
+                            const chartContainer = document.getElementById(chartId);
+
+                            if (chartContainer) {
+                                const parsedValues = test.last3Tests.map((testData) =>
+                                    parseFloat(testData.value.replace(",", "").trim())
+                                );
+
+                                const chartOptions = {
+                                    series: [
+                                        {
+                                            name: test.testName,
+                                            data: test.last3Tests.map((testData) => ({
+                                                x: testData.date,
+                                                y: parseFloat(testData.value.replace(",", "").trim())
+                                            }))
+                                        }
+                                    ],
+                                    chart: {
+                                        type: 'bar',
+                                        height: 160,
+                                        toolbar: { show: false },
+                                    },
+                                    xaxis: {
+                                        categories: test.last3Tests.map((testData) => testData.date),
+                                    },
+                                    yaxis: {
+                                        min: Math.min(...parsedValues) - 50,
+                                        max: Math.max(...parsedValues) + 50,
+                                        tickAmount: 4,
+                                        labels: {
+                                            formatter: function (value) {
+                                                return value.toFixed(2);
+                                            }
+                                        }
+                                    },
+                                    dataLabels: {
+                                        enabled: true,
+                                    },
+                                    plotOptions: {
+                                        bar: {
+                                            borderRadius: 5,
+                                            horizontal: false,
+                                        },
+                                    },
+                                    grid: {
+                                        show: true,
+                                        yaxis: {
+                                            lines: {
+                                                show: true,
+                                            },
+                                        },
+                                    },
+                                    colors: [test.abnormal ? "#ff5555" : "#228B22"],
+                                };
+
+                                const chart = new ApexCharts(chartContainer, chartOptions);
+                                chart.render();
+                            }
+                        }
+                    });
+                });
+            </script>
+
+
+
+</body>
+
+</html>
