@@ -25,13 +25,10 @@ app.get("/", async (req, res) => {
     const patientData = response.data;
     const history = patientData.history;
 
-    // Filter out tests that are not graph plotable
     const plotableTests = history.filter((test) => test.isGraphPlotable);
 
-    // Chunk the filtered plotable tests into chunks of 4
     const chunks = chunkArray(plotableTests, 4);
 
-    // Render the view with the necessary data
     res.render("index", {
       logoUrl: "/images/image.png",
       blackImageUrl: "/images/black.png",
@@ -47,7 +44,7 @@ app.get("/", async (req, res) => {
       gender: patientData.patientDemographic.gender === "F" ? "Female" : "Male",
       age: patientData.patientDemographic.age,
       historyChunks: chunks,
-      history: history, // You can also pass the full history if you need to display other information
+      history: history, 
     });
   } catch (error) {
     console.error("Error fetching patient data:", error);
