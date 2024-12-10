@@ -457,8 +457,8 @@
                                         categories: test.last3Tests.map((testData) => testData.date),
                                     },
                                     yaxis: {
-                                        min: Math.min(...parsedValues) - 50,
-                                        max: Math.max(...parsedValues) + 50,
+                                        min: Math.min(...parsedValues) - 0.5,
+                                        max: Math.max(...parsedValues) + 0.5,
                                         tickAmount: 4,
                                         labels: {
                                             formatter: function (value) {
