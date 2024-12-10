@@ -366,10 +366,10 @@
                 <p style="text-align: center; margin: 20px 0 20px 0; font-size: 20px;">As of 30th Dec</p>
     
                 <!-- Dynamic chart containers -->
-                <div id="charts-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                <div id="charts-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
                     <% chunk.forEach((test, index)=> { %>
                         <div class="card"
-                            style="background:#fff; padding: 15px; border-radius: 7px; display: flex; flex-direction: column; ">
+                            style="background:#fff; padding: 15px;padding-bottom: 0; border-radius: 7px; display: flex; flex-direction: column;margin-bottom: 0; ">
                             <div style="display: flex; justify-content: space-between; ">
                                 <div>
                                     <h2 style="font-size: 16px; margin: 0; max-width: 110px; word-wrap: break-word;">
@@ -405,7 +405,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="chart<%= pageIndex * 6 + index %>"></div>
+                            <div id="chart<%= pageIndex * 4 + index %>" ></div>
                         </div>
                         <% }) %>
                 </div>
@@ -435,7 +435,7 @@
 
                             if (chartContainer) {
                                 const parsedValues = test.last3Tests.map((testData) =>
-                                    parseFloat(testData.value.replace(",", "").trim())
+                                    parseFloat(testData.value)
                                 );
 
                                 const chartOptions = {
@@ -444,7 +444,7 @@
                                             name: test.testName,
                                             data: test.last3Tests.map((testData) => ({
                                                 x: testData.date,
-                                                y: parseFloat(testData.value.replace(",", "").trim())
+                                                y: parseFloat(testData.value)
                                             }))
                                         }
                                     ],
