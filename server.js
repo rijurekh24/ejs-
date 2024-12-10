@@ -31,6 +31,7 @@ app.get("/", async (req, res) => {
 
     res.render("index", {
       logoUrl: "/images/image.png",
+      grayUrl:"images/logo.png",
       blackImageUrl: "/images/black.png",
       qrCodeUrl: "/images/qr.png",
       iconPolygonUrl: "/images/Polygon 3.svg",
