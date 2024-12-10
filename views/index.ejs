@@ -491,8 +491,14 @@
             </header>
             <div class="content">
                 <h1 style="text-align: center; margin: 20px 0 0 0; font-size: 27px;">Historical Charts</h1>
-                <p id="current-date" style="text-align: center; margin: 20px 0 20px 0; font-size: 20px; margin-bottom: 50px;"></p>
-    
+                <% function getFormattedDate() { const date=new Date(); const day=date.getDate(); const
+                    month=date.toLocaleString('en-GB', { month: 'short' }); const suffix=(day % 10===1 && day !==11) ? "st" : (day %
+                    10===2 && day !==12) ? "nd" : (day % 10===3 && day !==13) ? "rd" : "th" ; return `${day}${suffix} ${month}`; } %>
+                    <p style="text-align: center; margin: 20px 0 20px 0; font-size: 20px; margin-bottom: 50px;">
+                        As of <%= getFormattedDate() %>
+                    </p>
+
+
                 <!-- Dynamic chart containers -->
                 <div id="charts-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap:20px;">
                     <% chunk.forEach((test, index)=> { %>
@@ -624,9 +630,6 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     
     <script>
-const currentDate = new Date();
-    const options = { day: 'numeric', month: 'short', year: 'numeric' };
-    document.getElementById("current-date").innerText = `As of ${currentDate.toLocaleDateString('en-GB', options)}`;
         document.addEventListener("DOMContentLoaded", function () {
             const history = <%- JSON.stringify(history) %>;
 
@@ -670,17 +673,14 @@ const currentDate = new Date();
                             dataLabels: {
                                 enabled: true,
                             },
-                            plotOptions: {
-    bar: {
-        borderRadius: {
-            topLeft: 5,
-            topRight: 5,
-            bottomLeft: 0,
-            bottomRight: 0
-        },
-        horizontal: false,
-    },
-},
+                           plotOptions: {
+                                bar: {
+                                    borderRadius: 5,
+                                    horizontal: false,
+                                    borderRadiusApplication: "end",
+                                    borderRadiusWhenStacked: false, 
+                                },
+                            },
                             grid: {
                                 show: true,
                                 yaxis: {
