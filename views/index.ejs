@@ -411,7 +411,6 @@
 
 
     <!-- page 4 -->
-
     <% historyChunks.forEach((chunk, pageIndex)=> { %>
         <!-- A4 Page -->
         <div class="a4-page" style="background-color: #f4f4f4 !important;">
@@ -421,7 +420,7 @@
             </header>
             <div class="content">
                 <h1 style="text-align: center; margin: 20px 0 0 0; font-size: 27px;">Historical Charts</h1>
-                <p style="text-align: center; margin: 20px 0 20px 0; font-size: 20px;">As of 30th Dec</p>
+                <p style="text-align: center; margin: 20px 0 20px 0; font-size: 20px; margin-bottom: 50px;">As of 30th Dec</p>
     
                 <!-- Dynamic chart containers -->
                 <div id="charts-container" style="display: grid; grid-template-columns: repeat(2, 1fr); gap:20px;">
@@ -430,7 +429,7 @@
                             style="background:#fff; padding: 15px;padding-bottom: 0; border-radius: 7px; display: flex; flex-direction: column;margin-bottom: 0; ">
                             <div style="display: flex; justify-content: space-between; ">
                                 <div>
-                                    <h2 style="font-size: 16px; margin: 0; max-width: 110px; word-wrap: break-word;">
+                                    <h2 style="font-size: 16px; margin: 0; max-width: 140px; word-wrap: break-word;">
                                         <%= test.testName %>
                                     </h2>
 
@@ -479,6 +478,7 @@
         </div>
         <% }) %>
     
+        
     <!-- page 5 -->
     <% const chunkSizeTable=8; %>
         <% for (let i=0; i < history.length; i +=chunkSizeTable) { %>
@@ -553,74 +553,74 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     
     <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    const history = <%- JSON.stringify(history) %>;
+        document.addEventListener("DOMContentLoaded", function () {
+            const history = <%- JSON.stringify(history) %>;
 
-                    history.forEach((test, index) => {
-                        if (test.isGraphPlotable) {
-                            const chartId = `chart${index}`; 
-                            const chartContainer = document.getElementById(chartId);
+            history.forEach((test, index) => {
+                if (test.isGraphPlotable) {
+                    const chartId = `chart${index}`;
+                    const chartContainer = document.getElementById(chartId);
 
-                            if (chartContainer) {
-                                const parsedValues = test.last3Tests.map((testData) =>
-                                    parseFloat(testData.value)
-                                );
+                    if (chartContainer) {
+                        const parsedValues = test.results.map((result) =>
+                            parseFloat(result)
+                        );
 
-                                const chartOptions = {
-                                    series: [
-                                        {
-                                            name: test.testName,
-                                            data: test.last3Tests.map((testData) => ({
-                                                x: testData.date,
-                                                y: parseFloat(testData.value)
-                                            }))
-                                        }
-                                    ],
-                                    chart: {
-                                        type: 'bar',
-                                        height: 160,
-                                        toolbar: { show: false },
-                                    },
-                                    xaxis: {
-                                        categories: test.last3Tests.map((testData) => testData.date),
-                                    },
-                                    yaxis: {
-                                       min: Math.min(...parsedValues) - 0.5,
-                                        max: Math.max(...parsedValues) + 0.5,
-                                        tickAmount: 4,
-                                        labels: {
-                                            formatter: function (value) {
-                                                return value.toFixed(2);
-                                            }
-                                        }
-                                    },
-                                    dataLabels: {
-                                        enabled: true,
-                                    },
-                                    plotOptions: {
-                                        bar: {
-                                            borderRadius: 5,
-                                            horizontal: false,
-                                        },
-                                    },
-                                    grid: {
+                        const chartOptions = {
+                            series: [
+                                {
+                                    name: test.testName,
+                                    data: test.results.map((result, i) => ({
+                                        x: test.dates[i],
+                                        y: parseFloat(result)
+                                    }))
+                                }
+                            ],
+                            chart: {
+                                type: 'bar',
+                                height: 220,
+                                toolbar: { show: false },
+                            },
+                            xaxis: {
+                                categories: test.dates,
+                            },
+                            yaxis: {
+                                
+                                tickAmount: 4,
+                                labels: {
+                                    formatter: function (value) {
+                                        return value.toFixed(2);
+                                    }
+                                }
+                            },
+                            dataLabels: {
+                                enabled: true,
+                            },
+                            plotOptions: {
+                                bar: {
+                                    borderRadius: 5,
+                                    horizontal: false,
+                                },
+                            },
+                            grid: {
+                                show: true,
+                                yaxis: {
+                                    lines: {
                                         show: true,
-                                        yaxis: {
-                                            lines: {
-                                                show: true,
-                                            },
-                                        },
                                     },
-                                    colors: [test.abnormal ? "#ff5555" : "#228B22"],
-                                };
+                                },
+                            },
+                            colors: [test.abnormal ? "#ff5555" : "#228B22"],
+                        };
 
-                                const chart = new ApexCharts(chartContainer, chartOptions);
-                                chart.render();
-                            }
-                        }
-                    });
-                });
+                        const chart = new ApexCharts(chartContainer, chartOptions);
+                        chart.render();
+                    }
+                }
+            });
+        });
     </script>
+
 
 
 
