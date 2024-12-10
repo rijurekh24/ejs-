@@ -348,6 +348,56 @@
         </div>
     </div>
 
+    <!-- page 3 -->
+
+    <% const chunkSize=8; %>
+        <% for (let i=0; i < history.length; i +=chunkSize) { %>
+            <div class="a4-page" style="background-color:#fff !important; page-break-after: always;">
+                <header style="display: flex; justify-content: space-between; align-items: center;">
+                    <img src="<%= logoUrl %>" alt="Logo" style="height: 35px;">
+                    <div style="font-size: 28px; color: #000; font-weight: bold;">Smart Report</div>
+                </header>
+    
+                <div
+                    style="text-align: center; display: flex; justify-content: center; flex-direction: column; align-items: center;">
+                    <h1 style="text-align: center; margin: 40px 0 20px 0; font-size: 27px;">Summary of Current Tests</h1>
+                </div>
+    
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr);">
+                    <% history.slice(i, i + chunkSize).forEach((test)=> { %>
+                        <div style="border: 1px solid #ddd; padding: 50px 35px; text-align: left;">
+                            <div style="display: flex; margin-bottom: 10px; gap: 15px;">
+                                <div>
+                                    <img src="<%= test.iconUrl || thyroid %>" alt=""
+                                        style="margin-right: 10px; width: 40px;">
+                                </div>
+                                <div style="display: flex; flex-direction: column; row-gap: 8px;">
+                                    <h3 style="margin: 0; font-size: 18px; width: 200px; white-space: normal; word-wrap: break-word;">
+                                        <%= test.testName %>
+                                    </h3>
+
+                                    <p style="margin: 0; font-size: 14px; color: #666;">This section summarizes your test
+                                        results.</p>
+                                    <p
+                                        style="font-weight: bold; margin: 0; font-size: 14px; margin-top: 10px; color: <%= test.abnormal ? '#b02b2b' : '#228b22' %>;">
+                                        ● <%= test.abnormal ? 'Concerning' : 'Everything looks good' %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
+    
+                <div style="margin-top:auto;">
+                    <hr>
+                    <footer>
+                        <p>NY Patil Medical College, Pune, Maharashtra</p>
+                        <p>www.mainwebsite.com</p>
+                    </footer>
+                </div>
+            </div>
+            <% } %>
+
 
 
     <!-- page 4 -->
@@ -421,10 +471,77 @@
         </div>
         <% }) %>
     
-            <!-- Import ApexCharts JS -->
-        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- page 5 -->
+    <% const chunkSizeTable=8; %>
+        <% for (let i=0; i < history.length; i +=chunkSizeTable) { %>
+            <div class="a4-page" style="background-color:#f4f4f4 !important;">
+                <header style="display: flex; justify-content: space-between; align-items: center;">
+                    <img src="<%= grayUrl %>" alt="Logo" style="height: 35px;">
+                    <div style="font-size: 28px; color: #000; font-weight: bold;">Smart Report</div>
+                </header>
     
-        <script>
+                <div
+                    style="text-align: center; display: flex; justify-content: center; flex-direction: column; align-items: center;">
+                    <h1 style="text-align: center; margin: 40px 0 40px 0; font-size: 27px;">Summary of Current Tests</h1>
+                </div>
+    
+                <div class="table-container" id="tableContainer">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Test Name</th>
+                                <th>Normal Range</th>
+                                <th>Previous Test</th>
+                                <th>Previous Test</th>
+                                <th>Latest Test</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% history.slice(i, i + chunkSizeTable).forEach(test=> { %>
+                                <tr>
+                                    <td>
+                                        <%= test.testName %>
+                                    </td>
+                                    <td>
+                                        <%= test.biologicalRefInterval[0] || "" %>
+                                    </td>
+                                    <td
+                                        style="color: <%= test.last3Tests[2]?.value > test.biologicalRefInterval[1] ? '#b02b2b' : '#228b22' %>;">
+                                        <%= test.last3Tests[2]?.value || "-" %>
+                                    </td>
+                                    <td
+                                        style="color: <%= test.last3Tests[1]?.value > test.biologicalRefInterval[1] ? '#b02b2b' : '#228b22' %>;">
+                                        <%= test.last3Tests[1]?.value || "-" %>
+                                    </td>
+                                    <td>
+                                        <span class="<%= test.abnormal ? 'concerning' : 'good' %>">
+                                            <%= test.last3Tests[0]?.value || "-" %><br>
+                                                <small>
+                                                    <%= test.abnormal ? 'Concerning' : 'Looks Good' %>
+                                                </small>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+    
+                <div style="margin-top: auto;">
+                    <hr>
+                    <footer>
+                        <p>NY Patil Medical College, Pune, Maharashtra</p>
+                        <p>www.mainwebsite.com</p>
+                    </footer>
+                </div>
+            </div>
+            <% } %>
+
+
+    <!-- Import ApexCharts JS -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+    <script>
                 document.addEventListener("DOMContentLoaded", function () {
                     const history = <%- JSON.stringify(history) %>;
 
@@ -457,7 +574,7 @@
                                         categories: test.last3Tests.map((testData) => testData.date),
                                     },
                                     yaxis: {
-                                        min: Math.min(...parsedValues) - 0.5,
+                                       min: Math.min(...parsedValues) - 0.5,
                                         max: Math.max(...parsedValues) + 0.5,
                                         tickAmount: 4,
                                         labels: {
@@ -492,7 +609,7 @@
                         }
                     });
                 });
-        </script>
+    </script>
 
 
 

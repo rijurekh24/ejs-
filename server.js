@@ -19,7 +19,7 @@ function chunkArray(arr, size) {
 app.get("/", async (req, res) => {
   try {
     const response = await axios.get(
-      "https://fc6c-14-142-19-238.ngrok-free.app/reports/pdf/?prn=PRN000001991436"
+      "https://fc6c-14-142-19-238.ngrok-free.app/reports/pdf/?prn=PRN000001985504"
     );
 
     const patientData = response.data;
@@ -31,7 +31,7 @@ app.get("/", async (req, res) => {
 
     res.render("index", {
       logoUrl: "/images/image.png",
-      grayUrl:"images/logo.png",
+      grayUrl: "images/logo.png",
       blackImageUrl: "/images/black.png",
       qrCodeUrl: "/images/qr.png",
       iconPolygonUrl: "/images/Polygon 3.svg",
@@ -40,12 +40,13 @@ app.get("/", async (req, res) => {
       introImageUrl: "/images/intro.png",
       greenLogoUrl: "/images/logo-green.png",
       rectangle22Url: "/images/Rectangle 22.png",
+      thyroid: "/images/healthicons_thyroid.svg",
       bookingId: patientData.prn,
       patientName: patientData.patientDemographic.name,
       gender: patientData.patientDemographic.gender === "F" ? "Female" : "Male",
       age: patientData.patientDemographic.age,
       historyChunks: chunks,
-      history: history, 
+      history: history,
     });
   } catch (error) {
     console.error("Error fetching patient data:", error);
