@@ -92,16 +92,31 @@ app.get("/", async (req, res) => {
         console.error("Error saving PDF:", err);
         return res.status(500).send("Error saving PDF");
       }
-    
-      res.redirect(`/patient-reports/${prn}-report.pdf`);
+
+      res.send(`
+        <html>
+          <head>
+            <title>Report Generated</title>
+            <style>
+              body { font-family:sans-serif; text-align: center; padding: 20px; }
+              button { font-size: 16px; padding: 10px 20px; cursor: pointer; }
+            </style>
+          </head>
+          <body>
+            <h2>Report for PRN: ${prn} is ready!</h2>
+            <p>Your report is ready to be downloaded. Please click the button below to open it in a new tab.</p>
+            <button onclick="window.open('/patient-reports/${prn}-report.pdf', '_blank')">Open Report in New Tab</button>
+          </body>
+        </html>
+      `);
     });
-    
 
   } catch (error) {
     console.error("Error fetching patient data:", error);
     res.status(500).send("Error fetching data");
   }
 });
+
 
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
