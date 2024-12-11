@@ -73,7 +73,12 @@ app.get("/", async (req, res) => {
       });
     });
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe', 
+      headless: true,  
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    
     const page = await browser.newPage();
 
     await page.setContent(htmlContent);
