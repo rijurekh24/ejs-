@@ -1,12 +1,16 @@
 const express = require("express");
 const path = require("path");
 const axios = require("axios");
+const puppeteer = require("puppeteer");
+const fs = require("fs");
 const app = express();
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use('/patient-reports', express.static(path.join(__dirname, 'patient-reports')));
 
 function chunkArray(arr, size) {
   const result = [];
@@ -36,25 +40,63 @@ app.get("/", async (req, res) => {
     const plotableTests = history.filter((test) => test.isGraphPlotable);
     const chunks = chunkArray(plotableTests, 4);
 
-    res.render("index", {
-      logoUrl: "/images/image.png",
-      grayUrl: "images/logo.png",
-      blackImageUrl: "/images/black.png",
-      qrCodeUrl: "/images/QR.png",
-      iconPolygonUrl: "/images/Polygon 3.svg",
-      iconGlobeUrl: "/images/material-symbols_globe.svg",
-      iconCallUrl: "/images/material-symbols_call.svg",
-      introImageUrl: "/images/intro.png",
-      greenLogoUrl: "/images/logo-green.png",
-      rectangle22Url: "/images/Rectangle 22.png",
-      thyroid: "/images/healthicons_thyroid.svg",
-      bookingId: patientData.prn,
-      patientName: patientData.patientDemographic.name,
-      gender: patientData.patientDemographic.gender === "F" ? "Female" : "Male",
-      age: patientData.patientDemographic.age,
-      historyChunks: chunks,
-      history: history,
+    const pdfDir = path.join(__dirname, "patient-reports");
+    if (!fs.existsSync(pdfDir)) {
+      fs.mkdirSync(pdfDir);
+    }
+
+    const htmlContent = await new Promise((resolve, reject) => {
+      res.render("index", {
+        logoUrl: "http://localhost:3000/images/logo.png", 
+        grayUrl: "http://localhost:3000/images/logo.png",
+        blackImageUrl: "http://localhost:3000/images/black.png",
+        qrCodeUrl: "http://localhost:3000/images/QR.png",
+        iconPolygonUrl: "http://localhost:3000/images/Polygon 3.svg",
+        iconGlobeUrl: "http://localhost:3000/images/material-symbols_globe.svg",
+        iconCallUrl: "http://localhost:3000/images/material-symbols_call.svg",
+        introImageUrl: "http://localhost:3000/images/intro.png",
+        greenLogoUrl: "http://localhost:3000/images/logo-green.png",
+        rectangle22Url: "http://localhost:3000/images/Rectangle 22.png",
+        thyroid: "http://localhost:3000/images/healthicons_thyroid.svg",
+        bookingId: patientData.prn,
+        patientName: patientData.patientDemographic.name,
+        gender: patientData.patientDemographic.gender === "F" ? "Female" : "Male",
+        age: patientData.patientDemographic.age,
+        historyChunks: chunks,
+        history: history,
+      }, (err, html) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(html);
+        }
+      });
     });
+
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    await page.setContent(htmlContent);
+
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true, 
+    });
+
+    await browser.close();
+
+    const pdfPath = path.join(pdfDir, `${prn}-report.pdf`);
+
+    fs.writeFile(pdfPath, pdfBuffer, (err) => {
+      if (err) {
+        console.error("Error saving PDF:", err);
+        return res.status(500).send("Error saving PDF");
+      }
+    
+      res.redirect(`/patient-reports/${prn}-report.pdf`);
+    });
+    
+
   } catch (error) {
     console.error("Error fetching patient data:", error);
     res.status(500).send("Error fetching data");
@@ -64,7 +106,3 @@ app.get("/", async (req, res) => {
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
 });
-
-
-// PRN000001991436
-//PRN000001985504
